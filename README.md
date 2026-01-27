@@ -50,7 +50,7 @@ Ros2 package for transport vrpn data to ros2 topic
 
    ```bash
       source /opt/ros/${ROS_DISTRO}/setup.bash
-      cd vrpn_client_ros2/src
+      cd vrpn_client_ros2
       colcon build
    ```
 
@@ -59,7 +59,7 @@ Ros2 package for transport vrpn data to ros2 topic
    执行以下命令运行vrpn_client_ros2：
 
    ```bash
-      cd vrpn_client_ros2/src
+      cd vrpn_client_ros2
       source install/setup.bash
       ros2 launch vrpn_listener sync_entity_state.launch
    ```

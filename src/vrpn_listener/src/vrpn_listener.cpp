@@ -52,10 +52,10 @@ void VRPN_CALLBACK VRPNListener::handlePose(void *userData, const vrpn_TRACKERCB
     pose_msg.pose.position.y = poseData.pos[1];
     pose_msg.pose.position.z = poseData.pos[2];
     
-    // 四元数：原始四元数绕Z轴逆时针旋转90度
-    // 创建绕Z轴逆时针90度的旋转四元数 (q_z_90)
+    // 四元数：原始四元数绕Z轴顺时针旋转90度
+    // 创建绕Z轴顺时针90度的旋转四元数 (q_z_90)
     tf2::Quaternion q_original(poseData.quat[0], poseData.quat[1], poseData.quat[2], poseData.quat[3]);
-    tf2::Quaternion q_z_90(0, 0, std::sin(M_PI / 4.0), std::cos(M_PI / 4.0));  // 绕Z轴90度旋转
+    tf2::Quaternion q_z_90(0, 0, -std::sin(M_PI / 4.0), std::cos(M_PI / 4.0));  // 绕Z轴顺时针90度旋转
     
     // 组合四元数：q_final = q_z_90 * q_original
     tf2::Quaternion q_rotated = q_z_90 * q_original;

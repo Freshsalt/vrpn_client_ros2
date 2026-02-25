@@ -55,17 +55,20 @@ void VRPN_CALLBACK VRPNListener::handlePose(void *userData, const vrpn_TRACKERCB
     // 四元数：原始四元数绕Z轴顺时针旋转90度
     // 创建绕Z轴顺时针90度的旋转四元数 (q_z_90)
     tf2::Quaternion q_original(poseData.quat[0], poseData.quat[1], poseData.quat[2], poseData.quat[3]);
-    tf2::Quaternion q_z_90(0, 0, -std::sin(M_PI / 4.0), std::cos(M_PI / 4.0));  // 绕Z轴顺时针90度旋转
-    
-    // 组合四元数：q_final = q_z_90 * q_original
-    tf2::Quaternion q_rotated = q_z_90 * q_original;
-    
-    // 将旋转后的四元数赋值到消息（x,y,z,w）
+    // 创建绕机体 Z 轴顺时针 90 度的增量四元数
+    // 顺时针 90 度即 -PI/2，公式中半角即 -PI/4
+    tf2::Quaternion q_z_rotate;
+    q_z_rotate.setRPY(0, 0, -M_PI / 2.0); 
+
+    // 组合四元数：注意顺序！右乘代表绕“当前机体坐标系”旋转
+    tf2::Quaternion q_rotated = q_original * q_z_rotate; 
+
+    // 赋值
     pose_msg.pose.orientation.x = q_rotated.x();
     pose_msg.pose.orientation.y = q_rotated.y();
     pose_msg.pose.orientation.z = q_rotated.z();
     pose_msg.pose.orientation.w = q_rotated.w();
-
+    
     // 设置消息头（frame 与时间戳）
     pose_msg.header.frame_id = listener->_frame_id;
     // VRPN 的时间以 timeval 给出，这里转换为 ROS2 时间（秒 + 纳秒）
